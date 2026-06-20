@@ -1,24 +1,35 @@
 import { CalendarDays, MapPin, Ticket } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
-import { SeatMap } from '@/components/seat-map'
+import { SeatMapLive } from '@/components/seat-map-live'
+import { getEvents } from '@/lib/dsql'
 
-interface EventDetails {
-  name: string
-  tagline: string
-  date: string
-  venue: string
-  city: string
-}
+export const dynamic = 'force-dynamic'
 
-const event: EventDetails = {
-  name: 'Midnight Frequency',
-  tagline: 'One night only. 500 seats. Zero oversells.',
-  date: 'Saturday, July 18, 2026 — 9:00 PM',
-  venue: 'The Volt Arena',
-  city: 'Brooklyn, NY',
-}
+export default async function EventPage() {
+  // Fetch real events from Aurora DSQL
+  const events = await getEvents()
+  const event = events[0] // Use first event (Taylor Swift)
 
-export default function EventPage() {
+  if (!event) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-10">
+          <p className="text-center text-muted-foreground">No events found. Run npm run seed first.</p>
+        </main>
+      </>
+    )
+  }
+
+  const eventDate = new Date(event.event_date).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
   return (
     <>
       <SiteHeader />
@@ -32,21 +43,27 @@ export default function EventPage() {
           <h1 className="text-balance text-4xl font-bold tracking-tight md:text-6xl">
             {event.name}
           </h1>
-          <p className="text-pretty text-lg text-muted-foreground">{event.tagline}</p>
+          <p className="text-pretty text-lg text-muted-foreground">
+            {event.available_seats} seats remaining · ${event.price_usd} per seat
+          </p>
           <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground sm:flex-row sm:gap-6">
             <span className="flex items-center gap-2">
               <CalendarDays className="size-4 text-primary" aria-hidden="true" />
-              {event.date}
+              {eventDate}
             </span>
             <span className="flex items-center gap-2">
               <MapPin className="size-4 text-primary" aria-hidden="true" />
-              {event.venue}, {event.city}
+              {event.venue}
             </span>
           </div>
         </section>
 
-        {/* Seat map */}
-        <SeatMap rows={20} cols={25} />
+        {/* Live seat map — connected to real APIs */}
+        <SeatMapLive
+          eventId={event.id}
+          eventName={event.name}
+          priceUsd={Number(event.price_usd)}
+        />
       </main>
     </>
   )

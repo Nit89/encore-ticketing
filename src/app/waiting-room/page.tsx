@@ -1,7 +1,13 @@
 import { SiteHeader } from '@/components/site-header'
-import { QueueStatus } from '@/components/queue-status'
+import { QueueStatusLive } from '@/components/queue-status-live'
+import { getEvents } from '@/lib/dsql'
 
-export default function WaitingRoomPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function WaitingRoomPage() {
+  const events = await getEvents()
+  const event = events[0]
+
   return (
     <>
       <SiteHeader />
@@ -14,11 +20,15 @@ export default function WaitingRoomPage() {
             You&apos;re in the waiting room
           </h1>
           <p className="max-w-md text-pretty text-muted-foreground">
-            Demand for Midnight Frequency is off the charts. Hang tight —
-            we&apos;ll let you in the moment a spot opens up.
+            Demand for <strong className="text-foreground">{event?.name ?? 'this event'}</strong> is
+            off the charts. Hang tight — we&apos;ll let you in the moment a spot opens up.
           </p>
         </div>
-        <QueueStatus initialPosition={2847} />
+
+        <QueueStatusLive
+          eventId={event?.id ?? ''}
+          eventName={event?.name ?? ''}
+        />
       </main>
     </>
   )
