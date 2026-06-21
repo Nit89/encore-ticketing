@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "migrate": "DOTENV_CONFIG_PATH=.env.local ts-node --project tsconfig.scripts.json --require dotenv/config scripts/migrate.ts",
-    "seed": "DOTENV_CONFIG_PATH=.env.local ts-node --project tsconfig.scripts.json --require dotenv/config scripts/seed.ts"
+    "seed": "DOTENV_CONFIG_PATH=.env.local ts-node --project tsconfig.scripts.json --require dotenv/config scripts/seed.ts",
+    "data:show": "DOTENV_CONFIG_PATH=.env.local ts-node --project tsconfig.scripts.json --require dotenv/config scripts/show-data.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dsql": "^3.1068.0",
