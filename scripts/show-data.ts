@@ -26,7 +26,7 @@ async function showDsqlData() {
 
 async function showDynamoData() {
   const tableName =
-    process.env.DYNAMODB_TABLE_NAME ?? "encore-seat-holds";
+    process.env.DYNAMODB_TABLE_NAME ?? "encore-seat-holds ";
   const result = await dynamo.send(
     new ScanCommand({
       TableName: tableName,
