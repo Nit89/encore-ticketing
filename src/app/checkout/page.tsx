@@ -25,7 +25,7 @@ function CheckoutContent() {
     message: string
     retries?: number
   } | null>(null)
-  const [timeLeft, setTimeLeft] = useState(10)
+  const [timeLeft, setTimeLeft] = useState(16)
 
   // 10-second countdown — matches DynamoDB TTL
   useEffect(() => {

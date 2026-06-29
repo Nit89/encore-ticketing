@@ -48,7 +48,7 @@ export async function holdSeat(
   userSession: string
 ): Promise<{ success: boolean; message: string }> {
   const now = Math.floor(Date.now() / 1000);
-  const expiresAt = now + 10; // 10 second hold
+  const expiresAt = now + 16; // 10 second hold
 
   try {
     await dynamo.send(

@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
       await pushUpdate();
 
       // Then every 2 seconds
-      const interval = setInterval(pushUpdate, 2000);
+      const interval = setInterval(pushUpdate, 1000);
 
       // Cleanup on disconnect
       req.signal.addEventListener("abort", () => {
